@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
-  const { login } = useAuth()
+  const { login, loading } = useAuth()
   const router = useRouter()
   const [form, setForm] = useState({
     username: '',
@@ -20,7 +20,7 @@ export default function Login() {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
 
@@ -29,7 +29,7 @@ export default function Login() {
       return
     }
 
-    const result = login(form.username, form.password)
+    const result = await login(form.username, form.password)
     if (result.success) {
       router.push('/profile')
     } else {
@@ -111,9 +111,11 @@ export default function Login() {
             borderRadius: '5px',
             cursor: 'pointer',
             fontWeight: 'bold',
-            marginBottom: '10px'
+            marginBottom: '10px',
+            opacity: loading ? 0.6 : 1,
+            pointerEvents: loading ? 'none' : 'auto'
           }}>
-            Acceder
+            {loading ? 'Accediendo...' : 'Acceder'}
           </button>
         </form>
 

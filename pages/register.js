@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useAuth } from '../context/AuthContext'
 
 export default function Register() {
-  const { register } = useAuth()
+  const { register, loading } = useAuth()
   const [form, setForm] = useState({
     nombre: '',
     apellidos: '',
@@ -21,7 +21,7 @@ export default function Register() {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
     
@@ -30,7 +30,7 @@ export default function Register() {
       return
     }
 
-    const result = register(form.nombre, form.apellidos, form.username, form.password)
+    const result = await register(form.nombre, form.apellidos, form.username, form.password)
     if (result.success) {
       setSuccess(true)
       setForm({ nombre: '', apellidos: '', username: '', password: '' })
@@ -160,9 +160,11 @@ export default function Register() {
             borderRadius: '5px',
             cursor: 'pointer',
             fontWeight: 'bold',
-            marginBottom: '10px'
+            marginBottom: '10px',
+            opacity: loading ? 0.6 : 1,
+            pointerEvents: loading ? 'none' : 'auto'
           }}>
-            Crear Usuario
+            {loading ? 'Creando...' : 'Crear Usuario'}
           </button>
         </form>
 
